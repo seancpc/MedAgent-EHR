@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>醫療 EHR Agentic AI（MedAgent-EHR）</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+      line-height: 1.6;
+      /* dark mode */
+      background-color: #1e1e1e;
+      color: #e0e0e0;
+    }
+    h1, h2 {
+      color: #00bcd4;
+      font-weight: bold;
+    }
+    .section {
+      margin-bottom: 2rem;
+    }
+    a {
+      color: #58a6ff;
+    }
+    .qa-block {
+      margin-bottom: 2em;
+    }
+    img.chart {
+      width: 100%;
+      max-width: 760px;
+      height: auto;
+      background: #f8f9fb;
+      border-radius: 6px;
+    }
+    code {
+      background: #2a2a2a;
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+  <h1>醫療 EHR Agentic AI（MedAgent-EHR）</h1>
+
+  <div class="section">
+    <h2>設計概念</h2>
+    <ul>
+      <li>有別於「問一句答一句」的聊天式 AI，這是 <strong>agentic AI</strong>：由 LLM 自己規劃步驟、決定呼叫哪個工具、執行臨床任務，並在寫入病歷前自我把關。</li>
+      <li><strong>不固定路徑、不固定步數</strong>的控制流（LLM 驅動，非寫死的流程）。</li>
+      <li>完全<strong>自架於本地 GPU</strong>，不依賴任何雲端 LLM API。</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>專案簡介</h2>
+    <p>系統在標準的 <strong>FHIR 電子病歷（EHR）</strong>環境中，執行查詢與寫入兩類臨床任務（查最新血糖、記錄血壓、開立檢驗／轉診醫囑等）。</p>
+    <p>採 <strong>Planner–Executor–Verifier</strong> 三角色 agent 架構，並以史丹佛的 <strong>MedAgentBench（300 題、10 類臨床任務）</strong>作為客觀評測，用其官方評分程式打分。</p>
+  </div>
+
+  <div class="section">
+    <h2>原始碼</h2>
+    <p>→ 完整程式與說明：<a href="https://github.com/seancpc/MedAgent-EHR" target="_blank">github.com/seancpc/MedAgent-EHR</a></p>
+  </div>
+
+  <div class="section">
+    <h2>系統架構</h2>
+    <ul>
+      <li><strong>Planner</strong>：把臨床任務拆解成有序步驟。</li>
+      <li><strong>Executor（ReAct loop）</strong>：逐步呼叫工具、依結果決定下一步。</li>
+      <li><strong>Verifier</strong>：寫入病歷前的安全閘，審核每筆 staged write 才允許 commit。</li>
+      <li>工具透過 <strong>MCP</strong> 串接 <strong>HAPI FHIR R4</strong>，讀寫皆走標準 FHIR API。</li>
+    </ul>
+    <img class="chart" src="architecture.svg" alt="MedAgent-EHR 系統架構：Planner → Executor → Verifier → FHIR">
+  </div>
+
+  <div class="section">
+    <h2>使用技術</h2>
+    <ul>
+      <li>LLM：<strong>Gemma-4-26B-A4B-it（QAT Q4，Google）</strong>，以 llama.cpp 自架於 RTX 4090（亦驗證過 Qwen3.6-35B-A3B）</li>
+      <li>Agent：Planner / Executor（ReAct）/ Verifier 三角色</li>
+      <li>工具與資料：<strong>MCP</strong>（fhir-mcp-server）、<strong>HAPI FHIR R4</strong></li>
+      <li>寫入安全：兩階段 <code>stage → commit</code> + Verifier 把關 + 醫療碼／劑量驗證</li>
+      <li>評測：MedAgentBench 官方 refsol grader、Python、Flask（web demo）</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>成效亮點</h2>
+    <ul>
+      <li><strong>MedAgentBench 官方評分：~88%（259–263 / 300）</strong>，<strong>高於論文公布最佳 baseline（GPT-4o 72%、Claude 3.5 Sonnet 70%）</strong>。</li>
+      <li>讀取類任務近滿分；寫入類經 FHIR 形狀對齊後 <strong>task3／task8 達 30/30</strong>。</li>
+      <li><strong>模型可移植性</strong>：因台灣法規將底層 LLM 從 Qwen（中國）遷移至 Gemma-4（Google），因系統與模型解耦，<strong>切換幾乎零程式改動、分數近乎持平（265 → 263）</strong>。</li>
+    </ul>
+    <img class="chart" src="progress.svg" alt="MedAgentBench 分數進展 124→265">
+    <img class="chart" src="baseline.svg" alt="各模型 Overall 成功率對比">
+    <p><strong>誠實說明：</strong>此 88% 反映的是「為此 benchmark 對齊過的 agent 系統」表現，非模型原始能力的純比較；能分辨「系統表現」與「模型能力」，正是本專案的工程價值之一。task10（條件 + <code>[值,時間]</code> 特殊格式）為部署模型 Gemma 的已知輸出弱項，經調查確認屬模型限制後，選擇<strong>保留誠實成績、不對特定題打補丁</strong>。</p>
+  </div>
+
+  <div class="section">
+    <h2>未來可擴展性</h2>
+    <ul>
+      <li>以真實藥品碼查詢工具（NDC／SNOMED／LOINC）取代由題目提供代碼，提升真實場景的自主性。</li>
+      <li>擴展至更多臨床任務類型與多步條件決策。</li>
+      <li>對接真實 EHR、加入更嚴格的臨床安全規則與稽核軌跡。</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>開發歷程</h2>
+    <ul>
+      <div class="qa-block">
+        <li><strong>問題：</strong>寫入任務全數失敗，agent 產生的 FHIR 資源與官方 grader 期望的形狀不符。</li>
+        <li><strong>解決方式：</strong>讓工具接受題目情境提供的代碼／數值／時間，verbatim 帶入 FHIR 資源（code passthrough），task3 由 0→30。</li>
+      </div>
+      <div class="qa-block">
+        <li><strong>問題：</strong>安全閘 Verifier 只看得到一行摘要、看不到完整 staged 資源，誤拒了正確的寫入。</li>
+        <li><strong>解決方式：</strong>讓 staged 摘要帶上完整 FHIR resource，Verifier 能真正檢視內容，task8 由 0→30。</li>
+      </div>
+      <div class="qa-block">
+        <li><strong>問題：</strong>讀取題查不到資料 —— 工具硬把詞彙 resolve 成 LOINC，但資料用的是本地碼（GLU／MG／A1C／K）。</li>
+        <li><strong>解決方式：</strong>get_observations 加 <code>code</code> 參數，用題目給的碼 verbatim 查詢、跳過 resolve，讀取題大幅提升。</li>
+      </div>
+      <div class="qa-block">
+        <li><strong>問題：</strong>用「只重跑失敗題」評估，把被改壞的題當已過略過，造成分數假象（虛高至 274，實際只有 ~249）。</li>
+        <li><strong>解決方式：</strong>改為只信「完整 300 題全跑」作為唯一基準。</li>
+      </div>
+      <div class="qa-block">
+        <li><strong>問題：</strong>遷移至 Gemma 後，模型在 task10 把 reasoning／markdown 洩漏進答案，污染輸出。</li>
+        <li><strong>解決方式：</strong>研究官方文件、用正法關閉 thinking 後仍洩漏，確認屬 Gemma-4-26B 的模型層限制；判斷不該為單一題打補丁（gaming），<strong>選擇保留誠實成績</strong>。</li>
+      </div>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>返回主頁</h2>
+    <p><a href="https://meadow-sky-dfe.notion.site/Sean-AI-1ec37081de33803ea095efee6f45a142?pvs=4">← 返回 Notion 主頁</a></p>
+  </div>
+</body>
+</html>
