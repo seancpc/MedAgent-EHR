@@ -1,0 +1,52 @@
+# ── 機密 / 設定(絕不提交)──────────────────────────────
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.sample
+
+# ── 模型權重(過大)────────────────────────────────────
+*.gguf
+*.bin
+*.safetensors
+
+# ── Python ───────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ── Benchmark 輸出 / log / 暫存 ─────────────────────────
+**/benchmark/results/
+*.log
+check/
+
+# ── MedAgentBench 資料 + 官方 grader(另行下載,見 README)──
+test_data_v2.json
+**/medagentbench_official/
+
+# ── 內部文件(不公開)──────────────────────────────────
+docs/devlog.md
+桌機RunBook.md
+MedAgent-MCP_專案說明.md
+
+# ── 助理 / IDE 設定 ─────────────────────────────────────
+.claude/
+.vscode/
+.idea/
+
+# ── 合成資料 ───────────────────────────────────────────
+/synthea/
+output/
+
+# ── OS ───────────────────────────────────────────────
+Thumbs.db
+.DS_Store
+desktop.ini

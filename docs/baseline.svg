@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 450" font-family="'Microsoft JhengHei','Noto Sans CJK TC','PingFang TC',sans-serif">
+  <rect x="0" y="0" width="720" height="450" fill="#ffffff"/>
+  <text x="360" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#1e293b">MedAgentBench Overall 成功率對比(%)</text>
+
+  <!-- y scale 0-100, baseline y=360, 1% = 3px -->
+  <line x1="80" y1="360" x2="680" y2="360" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="80" y1="285" x2="680" y2="285" stroke="#eef2f6" stroke-width="1"/>
+  <line x1="80" y1="210" x2="680" y2="210" stroke="#eef2f6" stroke-width="1"/>
+  <line x1="80" y1="135" x2="680" y2="135" stroke="#eef2f6" stroke-width="1"/>
+  <line x1="80" y1="60"  x2="680" y2="60"  stroke="#eef2f6" stroke-width="1"/>
+  <text x="70" y="364" text-anchor="end" font-size="11" fill="#94a3b8">0</text>
+  <text x="70" y="289" text-anchor="end" font-size="11" fill="#94a3b8">25</text>
+  <text x="70" y="214" text-anchor="end" font-size="11" fill="#94a3b8">50</text>
+  <text x="70" y="139" text-anchor="end" font-size="11" fill="#94a3b8">75</text>
+  <text x="70" y="64"  text-anchor="end" font-size="11" fill="#94a3b8">100</text>
+
+  <!-- bars: Qwen2.5 53, DeepSeek 56, Claude 70, GPT-4o 72, 本專案 88 ; centers 130,250,370,490,610 ; w=72 -->
+  <rect x="94"  y="201" width="72" height="159" fill="#94a3b8"/>
+  <text x="130" y="193" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">53</text>
+
+  <rect x="214" y="192" width="72" height="168" fill="#94a3b8"/>
+  <text x="250" y="184" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">56</text>
+
+  <rect x="334" y="150" width="72" height="210" fill="#2563eb"/>
+  <text x="370" y="142" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">70</text>
+
+  <rect x="454" y="144" width="72" height="216" fill="#2563eb"/>
+  <text x="490" y="136" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">72</text>
+
+  <rect x="574" y="99" width="72" height="261" fill="#f59e0b"/>
+  <text x="610" y="91" text-anchor="middle" font-size="15" font-weight="bold" fill="#b45309">~87 ★</text>
+
+  <!-- x labels -->
+  <text x="130" y="380" text-anchor="middle" font-size="11" fill="#475569">Qwen2.5</text>
+  <text x="250" y="380" text-anchor="middle" font-size="11" fill="#475569">DeepSeek-V3</text>
+  <text x="370" y="380" text-anchor="middle" font-size="11" fill="#475569">Claude 3.5</text>
+  <text x="490" y="380" text-anchor="middle" font-size="11" fill="#475569">GPT-4o</text>
+  <text x="610" y="380" text-anchor="middle" font-size="11" fill="#b45309" font-weight="bold">本專案</text>
+
+  <text x="360" y="416" text-anchor="middle" font-size="11" fill="#64748b">灰/藍 = 論文公布 baseline(原始模型 + 標準 harness)　橘 = 本專案(自架 + 工具對齊系統)</text>
+  <text x="360" y="434" text-anchor="middle" font-size="10" fill="#94a3b8">※ 本專案為對齊後的 agent 系統表現,非模型原始能力的純比較</text>
+</svg>

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MedAgent-MCP — EHR Copilot Demo</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header>
+    <h1>MedAgent-MCP</h1>
+    <p>Local agentic EHR copilot — type a clinical task; the agent plans,
+       queries the EHR over FHIR, and drafts write actions behind a safety
+       check (the Verifier).</p>
+    <p class="note">All data is public / synthetic. No real patient data (PHI).</p>
+  </header>
+  <main>
+    <section id="input">
+      <textarea id="task" rows="3"
+        placeholder="e.g. Find a patient's latest HbA1c; if above 8, order a follow-up HbA1c test."></textarea>
+      <button id="run">Run agent</button>
+    </section>
+    <section id="status" class="hidden"></section>
+    <section id="answer" class="hidden"></section>
+    <section id="plan" class="hidden"></section>
+    <section id="timeline" class="hidden"></section>
+  </main>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+# secrets / local config
+.env
+
+# self-signed TLS certs for the demo web server
+*.pem
+*.key
+*.crt
+
+# benchmark outputs (keep the folder, drop the contents)
+benchmark/results/*
+!benchmark/results/.gitkeep
+
+# MedAgentBench official grader — login-gated, must NOT be committed/published
+benchmark/medagentbench_official/refsol.py
+
+# python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# tooling
+.pytest_cache/
+.coverage
+dist/
+build/

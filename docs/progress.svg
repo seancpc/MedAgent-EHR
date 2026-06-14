@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 430" font-family="'Microsoft JhengHei','Noto Sans CJK TC','PingFang TC',sans-serif">
+  <rect x="0" y="0" width="720" height="430" fill="#ffffff"/>
+  <text x="360" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#1e293b">MedAgentBench 分數進展(滿分 300)</text>
+
+  <!-- y gridlines + labels (0,100,200,300) baseline y=350, 1 score = 1px -->
+  <line x1="70" y1="350" x2="680" y2="350" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="70" y1="250" x2="680" y2="250" stroke="#eef2f6" stroke-width="1"/>
+  <line x1="70" y1="150" x2="680" y2="150" stroke="#eef2f6" stroke-width="1"/>
+  <line x1="70" y1="50"  x2="680" y2="50"  stroke="#eef2f6" stroke-width="1"/>
+  <text x="60" y="354" text-anchor="end" font-size="11" fill="#94a3b8">0</text>
+  <text x="60" y="254" text-anchor="end" font-size="11" fill="#94a3b8">100</text>
+  <text x="60" y="154" text-anchor="end" font-size="11" fill="#94a3b8">200</text>
+  <text x="60" y="54"  text-anchor="end" font-size="11" fill="#94a3b8">300</text>
+
+  <!-- bars: 124,220,249,258,265 ; centers 140,250,360,470,580 ; w=64 -->
+  <rect x="108" y="226" width="64" height="124" fill="#2563eb"/>
+  <text x="140" y="218" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">124</text>
+
+  <rect x="218" y="130" width="64" height="220" fill="#2563eb"/>
+  <text x="250" y="122" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">220</text>
+
+  <rect x="328" y="101" width="64" height="249" fill="#2563eb"/>
+  <text x="360" y="93" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">249</text>
+
+  <rect x="438" y="92" width="64" height="258" fill="#2563eb"/>
+  <text x="470" y="84" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">258</text>
+
+  <rect x="548" y="85" width="64" height="265" fill="#f59e0b"/>
+  <text x="580" y="77" text-anchor="middle" font-size="14" font-weight="bold" fill="#b45309">265</text>
+
+  <!-- milestone labels -->
+  <text x="140" y="368" text-anchor="middle" font-size="11" fill="#475569">初版基準</text>
+  <text x="250" y="368" text-anchor="middle" font-size="11" fill="#475569">讀取對齊</text>
+  <text x="360" y="368" text-anchor="middle" font-size="11" fill="#475569">寫入安全閘</text>
+  <text x="470" y="368" text-anchor="middle" font-size="11" fill="#475569">用藥對齊</text>
+  <text x="580" y="368" text-anchor="middle" font-size="11" fill="#b45309" font-weight="bold">task10(最終)</text>
+
+  <text x="360" y="400" text-anchor="middle" font-size="12" fill="#64748b">每一步皆為確定性修復(Qwen 最佳化歷程),最終 265 / 300</text>
+  <text x="360" y="420" text-anchor="middle" font-size="11" fill="#94a3b8">→ 因法規遷移至 Gemma-4 後 ~263 / 300(≈88%),驗證模型可移植性</text>
+</svg>

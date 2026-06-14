@@ -1,0 +1,17 @@
+# docker-compose for local development.
+# Runs the HAPI FHIR R4 test server that fhir-mcp-server talks to.
+# The MCP server itself runs directly via `python -m fhir_mcp.server` during dev.
+services:
+  hapi-fhir:
+    image: hapiproject/hapi:latest
+    container_name: hapi-fhir
+    ports:
+      - "8080:8080"
+    environment:
+      # FHIR R4 — confirm against MedAgentBench (see 開工前待確認事項 #2)
+      hapi.fhir.fhir_version: R4
+    volumes:
+      - hapi-data:/data/hapi
+
+volumes:
+  hapi-data:
