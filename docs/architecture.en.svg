@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 600" font-family="'Segoe UI',Arial,sans-serif">
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#475569"/>
+    </marker>
+    <marker id="arrStart" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M8,0 L0,3 L8,6 Z" fill="#475569"/>
+    </marker>
+    <marker id="arrR" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#dc2626"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="720" height="600" fill="#ffffff"/>
+  <text x="360" y="26" text-anchor="middle" font-size="17" font-weight="bold" fill="#1e293b">Medical EHR Agentic AI — System Architecture</text>
+  <text x="360" y="46" text-anchor="middle" font-size="12" fill="#64748b">LLM-driven bounded autonomy: no fixed path, no fixed step count, safety gate before writes</text>
+
+  <!-- task -->
+  <rect x="160" y="66" width="200" height="44" rx="8" fill="#e2e8f0" stroke="#94a3b8"/>
+  <text x="260" y="93" text-anchor="middle" font-size="13" fill="#1e293b">Clinical task (NL + FHIR codes)</text>
+
+  <!-- Planner -->
+  <rect x="170" y="148" width="180" height="46" rx="8" fill="#2563eb"/>
+  <text x="260" y="176" text-anchor="middle" font-size="14" fill="#ffffff" font-weight="bold">Planner | build a plan</text>
+
+  <!-- Executor -->
+  <rect x="160" y="232" width="200" height="66" rx="8" fill="#2563eb"/>
+  <text x="260" y="260" text-anchor="middle" font-size="14" fill="#ffffff" font-weight="bold">Executor (ReAct loop)</text>
+  <text x="260" y="281" text-anchor="middle" font-size="12" fill="#dbeafe">observe result &#8594; decide next step</text>
+
+  <!-- Verifier -->
+  <rect x="160" y="336" width="200" height="64" rx="8" fill="#7c3aed"/>
+  <text x="260" y="363" text-anchor="middle" font-size="14" fill="#ffffff" font-weight="bold">Verifier safety gate</text>
+  <text x="260" y="383" text-anchor="middle" font-size="11" fill="#ede9fe">approve &#8594; commit | reject &#8594; return</text>
+
+  <!-- commit -->
+  <rect x="170" y="438" width="180" height="44" rx="8" fill="#059669"/>
+  <text x="260" y="465" text-anchor="middle" font-size="13" fill="#ffffff" font-weight="bold">commit: write to record</text>
+
+  <!-- final answer -->
+  <rect x="20" y="336" width="120" height="46" rx="8" fill="#e2e8f0" stroke="#94a3b8"/>
+  <text x="80" y="364" text-anchor="middle" font-size="13" fill="#1e293b">Final answer</text>
+
+  <!-- MCP -->
+  <rect x="470" y="240" width="170" height="44" rx="8" fill="#0891b2"/>
+  <text x="555" y="267" text-anchor="middle" font-size="13" fill="#ffffff" font-weight="bold">MCP tool layer</text>
+
+  <!-- FHIR cylinder -->
+  <rect x="495" y="334" width="120" height="60" fill="#0e7490"/>
+  <ellipse cx="555" cy="394" rx="60" ry="12" fill="#0c5e74"/>
+  <ellipse cx="555" cy="334" rx="60" ry="12" fill="#1898b8"/>
+  <text x="555" y="362" text-anchor="middle" font-size="12" fill="#ffffff" font-weight="bold">HAPI FHIR R4</text>
+  <text x="555" y="379" text-anchor="middle" font-size="10" fill="#cffafe">EHR data</text>
+
+  <!-- vertical arrows -->
+  <line x1="260" y1="110" x2="260" y2="146" stroke="#475569" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="260" y1="194" x2="260" y2="230" stroke="#475569" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="260" y1="298" x2="260" y2="334" stroke="#475569" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="300" y="320" font-size="10" fill="#64748b">stage_write</text>
+  <line x1="260" y1="400" x2="260" y2="436" stroke="#475569" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="300" y="423" font-size="10" fill="#64748b">approve</text>
+
+  <!-- executor -> final answer (task_done) -->
+  <path d="M160,272 C110,290 100,310 100,334" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="70" y="300" font-size="10" fill="#64748b">task_done</text>
+
+  <!-- executor <-> MCP -->
+  <line x1="360" y1="262" x2="470" y2="262" stroke="#475569" stroke-width="2" marker-start="url(#arrStart)" marker-end="url(#arr)"/>
+  <text x="415" y="252" text-anchor="middle" font-size="10" fill="#64748b">tool_call / result</text>
+
+  <!-- MCP <-> FHIR -->
+  <line x1="555" y1="284" x2="555" y2="322" stroke="#475569" stroke-width="2" marker-start="url(#arrStart)" marker-end="url(#arr)"/>
+
+  <!-- commit -> FHIR -->
+  <path d="M350,455 C430,455 470,420 500,392" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="430" y="478" font-size="10" fill="#64748b">POST</text>
+
+  <!-- replan loop (dashed) -->
+  <path d="M160,250 C100,238 100,190 168,176" fill="none" stroke="#dc2626" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#arrR)"/>
+  <text x="60" y="210" font-size="10" fill="#dc2626">replan</text>
+
+  <!-- legend -->
+  <text x="20" y="560" font-size="11" fill="#94a3b8">Blue = LLM roles  Purple = safety gate  Green = write  Cyan = tools/data  Red dashed = replan loop</text>
+</svg>
