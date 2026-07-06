@@ -67,6 +67,28 @@
       border-radius: 4px;
       font-size: 1.05rem;
     }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 1rem 0;
+    }
+    th, td {
+      border: 1px solid #3a3a3a;
+      padding: 6px 12px;
+      text-align: left;
+    }
+    th {
+      background: #26323b;
+      color: #00bcd4;
+    }
+    pre {
+      background: #2a2a2a;
+      padding: 0.8rem 1rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
   </style>
 </head>
 <body>
@@ -140,6 +162,50 @@
     </figure>
 
     <p><strong>誠實說明：</strong>此 88% 反映的是「為此 benchmark 對齊過的 agent 系統」表現，非模型原始能力的純比較；能分辨「系統表現」與「模型能力」，正是本專案的工程價值之一。task10（條件 + <code>[值,時間]</code> 特殊格式）為部署模型 Gemma 的已知輸出弱項，經調查確認屬模型限制後，選擇<strong>保留誠實成績、不對特定題打補丁</strong>。</p>
+  </div>
+
+  <div class="section">
+    <h2>效能與部署（RTX 4090 單卡實測）</h2>
+    <table>
+      <tr><th>指標</th><th>實測值</th></tr>
+      <tr><td>生成吞吐（單流）</td><td><strong>82 tokens/s</strong>（5 次取中位）</td></tr>
+      <tr><td>總吞吐（4 併發）</td><td><strong>119 tokens/s</strong>（4/4 全部成功）</td></tr>
+      <tr><td>首 token 延遲（TTFT）</td><td>2.4 s</td></tr>
+      <tr><td>256-token 回應總延遲</td><td>5.5 s（中位）</td></tr>
+      <tr><td>服務中 GPU 記憶體</td><td>20.1 / 24 GB（整卡，含 KV cache）</td></tr>
+      <tr><td>模型本體</td><td>~14 GB（26B MoE，QAT Q4 量化 GGUF）</td></tr>
+    </table>
+    <p>量測方式：llama.cpp <code>llama-server</code>（OpenAI 相容 API），以自製探測工具（repo 內 <code>benchmark/llm_perf_probe.py</code>）串流實測。意義：<strong>一張消費級 GPU 就能以互動可用的延遲服務 26B 模型的多併發請求</strong>——在「病歷資料不出院」的前提下即可落地部署。</p>
+    <p><strong>任務效率</strong>（全 300 題實測）：平均每題 <strong>3.6 步</strong>（中位數 4）完成——讀取查詢類約 3.4 步、寫入類 4.2 步、單題最多 10 步，在 <code>max_steps=25</code> 的護欄內自然收斂，展現「有界自主」的成本可控性。</p>
+    <figure>
+      <img class="shot" src="screenshots/20260706_perf_probe.png" alt="llm_perf_probe 實測輸出：82 tok/s、4 併發 119 tok/s、VRAM 20.1/24GB">
+      <figcaption>實測輸出：5 次串流量測 + 4 併發批次，數據即上表來源。</figcaption>
+    </figure>
+  </div>
+
+  <div class="section">
+    <h2>寫入安全實證（Verifier 安全閘）</h2>
+    <p>每一筆寫入病歷的資源都必須通過 Verifier 審核才允許 commit。以下取自一筆真實執行軌跡（task8：骨科轉診醫囑，agent 兩步完成）——Verifier 的<strong>五項結構化檢查全數通過</strong>才放行寫入；任一項不過即退回，agent 必須修正後重送：</p>
+    <pre>"verdict": {
+  "staged_id": "stg_209141be",
+  "verdict": "approved",
+  "reason": "The ServiceRequest correctly uses the provided SNOMED code for
+             orthopedic surgery referral, targets the correct patient, includes
+             the exact free-text note requested in the task, and sets the
+             priority to 'stat' as specified ...",
+  "checks": {
+    "required_fields": "pass",   // 必填欄位齊全
+    "code_resolved":   "pass",   // 醫療碼正確
+    "value_sanity":    "pass",   // 數值合理性
+    "intent_match":    "pass",   // 與任務意圖吻合
+    "safety":          "pass"    // 臨床安全
+  }
+}</pre>
+    <p>完整軌跡（Plan → tool call → 生成的 FHIR 資源 → 判決 → commit）可由 repo 內 <code>benchmark/run_single_task.py</code> 重現。</p>
+    <figure>
+      <img class="shot" src="screenshots/20260706_verifier_task8.png" alt="四題寫入任務的 Verifier 審核紀錄：每筆 stage_write 都經判決後才 commit">
+      <figcaption>實際執行紀錄：連續四題（轉診醫囑 ×2、血壓記錄、條件醫囑），每筆寫入都經 Verifier 判決（含具體理由）後才 commit；條件不成立的 task10_1 正確地未產生任何寫入。</figcaption>
+    </figure>
   </div>
 
   <div class="section">
