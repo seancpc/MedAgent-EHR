@@ -67,6 +67,28 @@
       border-radius: 4px;
       font-size: 1.05rem;
     }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 1rem 0;
+    }
+    th, td {
+      border: 1px solid #3a3a3a;
+      padding: 6px 12px;
+      text-align: left;
+    }
+    th {
+      background: #26323b;
+      color: #00bcd4;
+    }
+    pre {
+      background: #2a2a2a;
+      padding: 0.8rem 1rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
   </style>
 </head>
 <body>
@@ -140,6 +162,50 @@
     </figure>
 
     <p><strong>Honest note:</strong> this 88% reflects the performance of an <em>agent system aligned to this benchmark</em>, not a pure comparison of raw model capability; being able to distinguish "system performance" from "model capability" is itself part of this project's engineering value. task10 (conditional + <code>[value, timestamp]</code> special format) is a known output weakness of the deployed Gemma model; after investigation confirmed it is a model-level limitation, the choice was to <strong>keep the honest score rather than patch a single benchmark task</strong>.</p>
+  </div>
+
+  <div class="section">
+    <h2>Serving Performance (measured on a single RTX 4090)</h2>
+    <table>
+      <tr><th>Metric</th><th>Measured</th></tr>
+      <tr><td>Generation throughput (single stream)</td><td><strong>82 tokens/s</strong> (median of 5 runs)</td></tr>
+      <tr><td>Aggregate throughput (4 concurrent)</td><td><strong>119 tokens/s</strong> (4/4 succeeded)</td></tr>
+      <tr><td>Time to first token (TTFT)</td><td>2.4 s</td></tr>
+      <tr><td>Total latency, 256-token response</td><td>5.5 s (median)</td></tr>
+      <tr><td>GPU memory while serving</td><td>20.1 / 24 GB (whole card, incl. KV cache)</td></tr>
+      <tr><td>Model footprint</td><td>~14 GB (26B MoE, QAT Q4 GGUF)</td></tr>
+    </table>
+    <p>Measured against llama.cpp <code>llama-server</code> (OpenAI-compatible API) with a streaming probe included in the repo (<code>benchmark/llm_perf_probe.py</code>). The takeaway: <strong>a single consumer GPU serves a 26B model to multiple concurrent users at interactive latency</strong> — deployable where medical records must never leave the premises.</p>
+    <p><strong>Task efficiency</strong> (measured over the full 300 tasks): <strong>3.6 steps</strong> per task on average (median 4) — read/query tasks ~3.4 steps, write tasks 4.2, at most 10 steps for a single task. The agent converges naturally well inside the <code>max_steps=25</code> guardrail, showing that its bounded autonomy has a controllable cost.</p>
+    <figure>
+      <img class="shot" src="screenshots/20260706_perf_probe.png" alt="llm_perf_probe measured output: 82 tok/s, 119 tok/s at 4 concurrent, VRAM 20.1/24GB">
+      <figcaption>Measured output: 5 streaming runs + one 4-concurrent batch — the source of the table above.</figcaption>
+    </figure>
+  </div>
+
+  <div class="section">
+    <h2>Write-Safety Evidence (the Verifier gate)</h2>
+    <p>Every resource written to the record must pass Verifier review before commit. The excerpt below is from a real execution trace (task8: an orthopedic referral order, completed in two steps) — the write is only released after <strong>all five structured checks pass</strong>; any failure sends it back for the agent to correct and resubmit:</p>
+    <pre>"verdict": {
+  "staged_id": "stg_209141be",
+  "verdict": "approved",
+  "reason": "The ServiceRequest correctly uses the provided SNOMED code for
+             orthopedic surgery referral, targets the correct patient, includes
+             the exact free-text note requested in the task, and sets the
+             priority to 'stat' as specified ...",
+  "checks": {
+    "required_fields": "pass",
+    "code_resolved":   "pass",
+    "value_sanity":    "pass",
+    "intent_match":    "pass",
+    "safety":          "pass"
+  }
+}</pre>
+    <p>The full trajectory (Plan → tool call → generated FHIR resource → verdict → commit) is reproducible with <code>benchmark/run_single_task.py</code> in the repo.</p>
+    <figure>
+      <img class="shot" src="screenshots/20260706_verifier_task8.png" alt="Verifier review log across four write tasks: every stage_write is judged before commit">
+      <figcaption>Actual execution log: four consecutive tasks (two referral orders, one blood-pressure record, one conditional order) — every write passes Verifier judgment (with a concrete reason) before commit; task10_1, whose condition was not met, correctly produced no write at all.</figcaption>
+    </figure>
   </div>
 
   <div class="section">
