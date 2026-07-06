@@ -53,6 +53,20 @@ docs/                # architecture diagram, result charts, portfolio writeup
 
 ### Quick start
 
+**Option A — Docker Compose (FHIR + MCP tool layer + web demo, one command):**
+
+```bash
+# .env at the repo root — point containers at your host llama-server:
+#   OLLAMA_BASE_URL=http://host.docker.internal:<llama-server-port>/v1
+#   OLLAMA_MODEL=<model-alias>
+docker compose up
+# then open https://localhost:9443 (self-signed certificate — accept the warning)
+```
+
+llama-server itself runs natively on the host (it needs the GPU). If containers cannot reach it, start it with `--host 0.0.0.0`.
+
+**Option B — manual:**
+
 ```bash
 # 1. Install (Python 3.12)
 python -m venv .venv && . .venv/Scripts/activate   # Windows: .\.venv\Scripts\activate
@@ -160,6 +174,20 @@ docs/                # 架構圖、成效圖、portfolio 說明
 ```
 
 ### 快速開始
+
+**方式 A — Docker Compose(FHIR + MCP 工具層 + web demo,一鍵起):**
+
+```bash
+# 在專案根目錄建 .env,讓容器連到主機上的 llama-server:
+#   OLLAMA_BASE_URL=http://host.docker.internal:<llama-server埠>/v1
+#   OLLAMA_MODEL=<模型別名>
+docker compose up
+# 開啟 https://localhost:9443(自簽憑證,瀏覽器警告按繼續即可)
+```
+
+llama-server 本身在主機原生執行(需要 GPU);若容器連不到,啟動時加 `--host 0.0.0.0`。
+
+**方式 B — 手動:**
 
 ```bash
 # 1. 安裝(Python 3.12)

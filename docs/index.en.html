@@ -125,6 +125,10 @@
       <li>Tools connect to <strong>HAPI FHIR R4</strong> via <strong>MCP</strong>; all reads and writes go through the standard FHIR API.</li>
     </ul>
     <img class="chart" src="architecture.en.svg" alt="MedAgent-EHR architecture: Planner → Executor → Verifier → FHIR">
+    <figure>
+      <img class="shot" src="screenshots/20260706_webdemo_timeline.png" alt="Web demo run: Plan and step-by-step ReAct timeline, including a blocked direct commit">
+      <figcaption>An actual web-demo run (record a blood pressure): a two-step Plan → <code>find_patient</code> locates the patient → <code>stage_write</code> passes Verifier review and writes to FHIR → the executor's attempt to call <code>commit_write</code> directly is blocked by the program-side gate (red block) → done. <strong>Both protection layers — the LLM Verifier and the program-side gate — are demonstrably active.</strong></figcaption>
+    </figure>
   </div>
 
   <div class="section">
