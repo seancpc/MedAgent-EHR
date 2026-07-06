@@ -125,6 +125,10 @@
       <li>工具透過 <strong>MCP</strong> 串接 <strong>HAPI FHIR R4</strong>，讀寫皆走標準 FHIR API。</li>
     </ul>
     <img class="chart" src="architecture.svg" alt="MedAgent-EHR 系統架構：Planner → Executor → Verifier → FHIR">
+    <figure>
+      <img class="shot" src="screenshots/20260706_webdemo_timeline.png" alt="Web demo 執行畫面：Plan 與逐步 ReAct timeline，含寫入閘攔截">
+      <figcaption>Web demo 實際執行畫面（記錄血壓任務）：Plan 兩步 → <code>find_patient</code> 定位病人 → <code>stage_write</code> 經 Verifier 審核後寫入 FHIR → executor 試圖直接呼叫 <code>commit_write</code> 被程式側閘門攔下（紅框）→ 完成。<strong>LLM Verifier 與程式側 gate 的雙層防護都在真實運作。</strong></figcaption>
+    </figure>
   </div>
 
   <div class="section">
