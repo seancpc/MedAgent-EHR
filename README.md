@@ -1,5 +1,7 @@
 # MedAgent-EHR
 
+[![CI](https://github.com/seancpc/MedAgent-EHR/actions/workflows/ci.yml/badge.svg)](https://github.com/seancpc/MedAgent-EHR/actions/workflows/ci.yml)
+
 **[English](#english) | [繁體中文](#繁體中文)**
 
 ---
@@ -94,6 +96,17 @@ python medagent-ehr/benchmark/run_medagentbench.py test_data_v2.json \
 
 - The 9 stable task categories total 258/270; task10 (conditional + `[value, timestamp]` special format) is a known output weakness of the deployed model, reported honestly as a range.
 - Migrating from Qwen to Gemma-4 (regulatory compliance) required almost no code change and kept the score nearly flat → the system is not tied to a single model.
+
+### Testing
+
+Both packages ship unit tests (no running services required — LLM and FHIR are mocked):
+
+```bash
+pip install -e "./fhir-mcp-server[dev]" -e "./medagent-ehr[dev]"
+pytest fhir-mcp-server/tests medagent-ehr/tests -q
+```
+
+Coverage focus: write validators and staging (`fhir-mcp-server/tests`), agent action parsing, orchestrator control flow (write gate / replan / step limits), error recovery, and prompt templates (`medagent-ehr/tests`). The same suite runs on every push via GitHub Actions (badge above).
 
 ### License
 
@@ -191,6 +204,17 @@ python medagent-ehr/benchmark/run_medagentbench.py test_data_v2.json \
 
 - 9 類任務穩定共 258/270;task10(條件 + `[值,時間]` 特殊格式)為部署模型的已知輸出弱項,以範圍誠實表述。
 - 從 Qwen 遷移至 Gemma-4(法規合規)幾乎零程式改動、分數近乎持平 → 系統不綁單一模型。
+
+### 測試
+
+兩個套件皆附單元測試(不需啟動任何服務——LLM 與 FHIR 均為 mock):
+
+```bash
+pip install -e "./fhir-mcp-server[dev]" -e "./medagent-ehr[dev]"
+pytest fhir-mcp-server/tests medagent-ehr/tests -q
+```
+
+涵蓋重點:寫入 validators 與 staging(`fhir-mcp-server/tests`)、agent 動作解析、orchestrator 控制流(寫入閘/replan/步數上限)、錯誤復原、prompt 模板(`medagent-ehr/tests`)。每次 push 由 GitHub Actions 自動執行(見頂部 badge)。
 
 ### 授權
 
