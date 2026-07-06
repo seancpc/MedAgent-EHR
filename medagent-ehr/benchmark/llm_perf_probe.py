@@ -52,6 +52,7 @@ def _one_run(base: str, model: str, prompt: str, max_tokens: int) -> dict:
     t_last = None
     chunk_tokens = 0
     usage_tokens = None
+    sample_chunk = ""
 
     with httpx.Client(timeout=600) as client:
         with client.stream("POST", f"{base}/chat/completions", json=body) as resp:
@@ -62,12 +63,18 @@ def _one_run(base: str, model: str, prompt: str, max_tokens: int) -> dict:
                 payload = line[len("data: "):]
                 if payload.strip() == "[DONE]":
                     break
+                if not sample_chunk:
+                    sample_chunk = payload[:400]
                 chunk = json.loads(payload)
                 usage = chunk.get("usage")
                 if usage and usage.get("completion_tokens"):
                     usage_tokens = usage["completion_tokens"]
                 choices = chunk.get("choices") or []
-                if choices and (choices[0].get("delta") or {}).get("content"):
+                delta = (choices[0].get("delta") or {}) if choices else {}
+                # count reasoning tokens too — models with thinking enabled
+                # (e.g. Gemma) stream them as delta.reasoning_content, and the
+                # generation rate is the same metric either way
+                if delta.get("content") or delta.get("reasoning_content"):
                     now = time.monotonic()
                     if t_first is None:
                         t_first = now
@@ -75,8 +82,11 @@ def _one_run(base: str, model: str, prompt: str, max_tokens: int) -> dict:
                     chunk_tokens += 1
 
     t_end = time.monotonic()
-    if t_first is None:  # no content came back at all
-        raise RuntimeError("stream returned no content — check model/base-url")
+    if t_first is None:  # nothing token-like came back at all
+        raise RuntimeError(
+            "stream returned no content/reasoning deltas — first raw chunk was: "
+            f"{sample_chunk or '(no data lines at all)'}"
+        )
     tokens = usage_tokens if usage_tokens else chunk_tokens
     gen_time = (t_last - t_first) if t_last and t_last > t_first else 0.0
     return {
