@@ -18,6 +18,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import time
 from concurrent.futures import ThreadPoolExecutor
 from concurrent.futures import TimeoutError as FuturesTimeout
 from pathlib import Path
@@ -133,9 +134,11 @@ def main() -> int:
                 print(f"  [{i}/{total}] {task.task_id}: skip (done)", file=sys.stderr)
                 continue
 
+            t_task = time.monotonic()
             result = _run_with_timeout(
                 orchestrator, task.instruction, args.per_task_timeout
             )
+            duration_s = round(time.monotonic() - t_task, 2)
             if result is None:
                 records.append(
                     {
@@ -149,6 +152,7 @@ def main() -> int:
                         ),
                         "steps_used": 0,
                         "final_answer": "",
+                        "duration_s": duration_s,
                     }
                 )
                 print(f"  [{i}/{total}] {task.task_id}: timeout", file=sys.stderr)
@@ -165,6 +169,7 @@ def main() -> int:
                         "grade_detail": graded.detail,
                         "steps_used": result.steps_used,
                         "final_answer": result.final_answer,
+                        "duration_s": duration_s,
                     }
                 )
                 print(

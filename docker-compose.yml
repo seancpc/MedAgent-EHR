@@ -1,0 +1,54 @@
+# One-command startup for the MedAgent-EHR stack (FHIR + MCP tool layer + web demo).
+#
+#   docker compose up
+#
+# The LLM (llama-server) is NOT part of this compose file — it needs the GPU and
+# a local GGUF model, so run it natively on the host. Point the web service at it
+# by setting OLLAMA_BASE_URL in a `.env` file next to this compose file, using
+# host.docker.internal instead of localhost, e.g.:
+#
+#   OLLAMA_BASE_URL=http://host.docker.internal:<your-llama-server-port>/v1
+#   OLLAMA_MODEL=<your-model-alias>
+#
+# The FHIR image is MedAgentBench's pre-seeded HAPI server (used for benchmarking).
+# For a blank EHR, swap it for hapiproject/hapi:latest.
+
+services:
+  fhir:
+    image: jyxsu6/medagentbench:latest
+    ports:
+      - "8080:8080"
+
+  mcp:
+    image: python:3.12-slim
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+    command: bash -c "pip install -q -e ./fhir-mcp-server && python -m fhir_mcp.server"
+    environment:
+      MCP_HOST: 0.0.0.0
+      MCP_PORT: "9765"
+      FHIR_BASE_URL: http://fhir:8080/fhir
+    ports:
+      - "9765:9765"
+    depends_on:
+      - fhir
+
+  web:
+    image: python:3.12-slim
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+    command: bash -c "pip install -q -e ./medagent-ehr && python -m medagent.web.app"
+    environment:
+      WEB_HOST: 0.0.0.0
+      WEB_PORT: "9443"
+      FHIR_MCP_URL: http://mcp:9765/mcp
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:?set OLLAMA_BASE_URL in .env (use host.docker.internal, not localhost)}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-}
+    ports:
+      - "9443:9443"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - mcp
