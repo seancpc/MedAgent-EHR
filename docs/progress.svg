@@ -33,7 +33,7 @@
   <text x="250" y="368" text-anchor="middle" font-size="11" fill="#475569">讀取對齊</text>
   <text x="360" y="368" text-anchor="middle" font-size="11" fill="#475569">寫入安全閘</text>
   <text x="470" y="368" text-anchor="middle" font-size="11" fill="#475569">用藥對齊</text>
-  <text x="580" y="368" text-anchor="middle" font-size="11" fill="#b45309" font-weight="bold">task10(最終)</text>
+  <text x="580" y="368" text-anchor="middle" font-size="11" fill="#b45309" font-weight="bold">task10 格式對齊（最終）</text>
 
   <text x="360" y="400" text-anchor="middle" font-size="12" fill="#64748b">每一步皆為確定性修復(Qwen 最佳化歷程),最終 265 / 300</text>
   <text x="360" y="420" text-anchor="middle" font-size="11" fill="#94a3b8">→ 因法規遷移至 Gemma-4 後 ~263 / 300(≈88%),驗證模型可移植性</text>
