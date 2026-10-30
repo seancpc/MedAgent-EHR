@@ -12,7 +12,7 @@
 
 A self-hosted LLM clinical agent: in a standard **FHIR Electronic Health Record (EHR)** environment, the model **plans its own steps, calls tools, performs reads and writes, and self-checks before writing to the record**. Validated with the official grader of Stanford's **MedAgentBench (300 tasks)**.
 
-> **Result**: **~88% (259–263 / 300)** on the official MedAgentBench grader, **above the best published baselines (GPT-4o 72% / Claude 3.5 Sonnet 70%)**. The underlying model can be swapped between Qwen and Gemma with near-identical scores, demonstrating that the system is decoupled from any single model.
+> **Result**: **~88% (259–263 / 300)** on the official MedAgentBench grader, **above the best published baselines (Claude 3.5 Sonnet v2 69.67%)**. The underlying model can be swapped between Qwen and Gemma with near-identical scores, demonstrating that the system is decoupled from any single model.
 >
 > ⚠️ *This score reflects an agent system aligned to this benchmark, not a pure comparison of raw model capability.*
 
@@ -105,8 +105,7 @@ python medagent-ehr/benchmark/run_medagentbench.py test_data_v2.json \
 | | MedAgentBench Overall |
 |---|---|
 | This project (self-hosted Gemma-4 + tool alignment) | **~88% (259–263/300)** |
-| GPT-4o (paper) | 72% |
-| Claude 3.5 Sonnet (paper) | 70% |
+| Claude 3.5 Sonnet v2 (paper) | 69.67% |
 
 - The 9 stable task categories total 258/270; task10 (conditional + `[value, timestamp]` special format) is a known output weakness of the deployed model, reported honestly as a range.
 - Migrating from Qwen to Gemma-4 (regulatory compliance) required almost no code change and kept the score nearly flat → the system is not tied to a single model.
@@ -134,7 +133,7 @@ The project's own code is under the [MIT License](LICENSE). MedAgentBench's data
 
 自架 LLM 的臨床 agent:在標準 **FHIR 電子病歷(EHR)** 環境中,由模型**自己規劃步驟、呼叫工具、執行查詢與寫入,並在寫入病歷前自我把關**。以史丹佛 **MedAgentBench(300 題)** 的官方評分驗證。
 
-> **成果**:在 MedAgentBench 官方 grader 上達 **~88%(259–263 / 300)**,**高於論文公布最佳 baseline(GPT-4o 72% / Claude 3.5 Sonnet 70%)**。底層模型可在 Qwen ↔ Gemma 間切換而分數近乎持平,驗證系統與模型解耦。
+> **成果**:在 MedAgentBench 官方 grader 上達 **~88%(259–263 / 300)**,**高於論文公布的最佳 baseline（Claude 3.5 Sonnet v2，69.67%）**。底層模型可在 Qwen ↔ Gemma 間切換而分數近乎持平,驗證系統與模型解耦。
 >
 > ⚠️ *此分數為「對齊該 benchmark 的 agent 系統」表現,非原始模型能力的純比較。*
 
@@ -227,8 +226,7 @@ python medagent-ehr/benchmark/run_medagentbench.py test_data_v2.json \
 | | MedAgentBench Overall |
 |---|---|
 | 本專案(自架 Gemma-4 + 工具對齊)| **~88%(259–263/300)** |
-| GPT-4o(論文)| 72% |
-| Claude 3.5 Sonnet（論文)| 70% |
+| Claude 3.5 Sonnet v2（論文)| 69.67% |
 
 - 9 類任務穩定共 258/270;task10(條件 + `[值,時間]` 特殊格式)為部署模型的已知輸出弱項,以範圍誠實表述。
 - 從 Qwen 遷移至 Gemma-4(法規合規)幾乎零程式改動、分數近乎持平 → 系統不綁單一模型。
