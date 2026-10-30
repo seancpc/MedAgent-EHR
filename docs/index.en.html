@@ -1,191 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Medical EHR Agentic AI (MedAgent-EHR)</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 2rem;
-      line-height: 1.6;
-      /* dark mode */
-      background-color: #1e1e1e;
-      color: #e0e0e0;
-    }
-    h1, h2 {
-      color: #00bcd4;
-      font-weight: bold;
-    }
-    .section {
-      margin-bottom: 2rem;
-    }
-    a {
-      color: #58a6ff;
-    }
-    .qa-block {
-      margin-bottom: 2em;
-    }
-    img.chart {
-      width: 100%;
-      max-width: 760px;
-      height: auto;
-      background: #f8f9fb;
-      border-radius: 6px;
-    }
-    figure {
-      margin: 1.2rem 0;
-    }
-    img.shot {
-      width: 100%;
-      max-width: 760px;
-      height: auto;
-      border: 1px solid #333;
-      border-radius: 6px;
-    }
-    figcaption {
-      font-size: 0.85rem;
-      color: #9aa0a6;
-      margin-top: 0.4rem;
-    }
-    code {
-      background: #2a2a2a;
-      padding: 1px 5px;
-      border-radius: 3px;
-    }
-    .lang {
-      text-align: right;
-      font-size: 0.9rem;
-      margin-bottom: 0;
-    }
-    .banner {
-      background: #26323b;
-      border-left: 4px solid #00bcd4;
-      padding: 0.6rem 1rem;
-      border-radius: 4px;
-      font-size: 1.05rem;
-    }
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      margin: 1rem 0;
-    }
-    th, td {
-      border: 1px solid #3a3a3a;
-      padding: 6px 12px;
-      text-align: left;
-    }
-    th {
-      background: #26323b;
-      color: #00bcd4;
-    }
-    pre {
-      background: #2a2a2a;
-      padding: 0.8rem 1rem;
-      border-radius: 6px;
-      overflow-x: auto;
-      font-size: 0.82rem;
-      line-height: 1.45;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Medical EHR Agentic AI (MedAgent-EHR)</title>
+<style>
+  :root {
+    --bg: #1e1e1e;
+    --text: #e0e0e0;
+    --heading: #00bcd4;
+    --link: #58a6ff;
+    --code-bg: #2a2a2a;
+    --border: #333;
+    --muted: #9aa0a6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    font-size: 16px;
+  }
+  .container { max-width: 800px; margin: 0 auto; padding: 2rem; }
+  h1 { color: var(--heading); font-weight: bold; font-size: 2rem; margin: 0 0 0.3rem; }
+  .subtitle { color: var(--text); font-size: 1.1rem; margin: 0; }
+  .lang { text-align: right; font-size: 0.9rem; margin: 0 0 1.2rem; }
+  .banner {
+    background: #232323; border: 1px solid var(--border); border-radius: 6px;
+    padding: 0.7rem 1rem; margin: 0.9rem 0 0; font-size: 0.9rem;
+  }
+  .banner strong { color: var(--heading); }
+  .lead {
+    background: #232323; border-left: 4px solid var(--heading);
+    border-radius: 0 6px 6px 0; padding: 1rem 1.1rem; margin: 1.6rem 0;
+  }
+  h2 { color: var(--heading); font-weight: bold; font-size: 1.5rem; margin: 2.5rem 0 0.8rem; }
+  h3 { color: #ffffff; font-weight: bold; font-size: 1.12rem; margin: 1.9rem 0 0.4rem; }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  strong { color: #ffffff; }
+  ul { padding-left: 1.4rem; margin: 0.7rem 0; }
+  li { margin: 0.4rem 0; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 0.95rem; }
+  th, td { border: 1px solid var(--border); padding: 0.5rem 0.8rem; text-align: left; vertical-align: top; }
+  th { background: var(--code-bg); white-space: nowrap; }
+  pre {
+    background: var(--code-bg); padding: 1rem; border-radius: 6px;
+    overflow-x: auto; font-size: 0.78rem; line-height: 1.45;
+    font-family: Consolas, monospace; color: var(--text);
+  }
+  code { background: var(--code-bg); padding: 1px 5px; border-radius: 3px; font-size: 90%; }
+  .btns { display: flex; gap: 0.8rem; flex-wrap: wrap; margin: 1.1rem 0; }
+  .btn {
+    display: inline-block; padding: 0.6rem 1.1rem;
+    border: 1px solid var(--link); border-radius: 6px;
+    color: var(--link); font-size: 0.95rem; font-weight: 500;
+  }
+  .btn:hover { background: var(--link); color: var(--bg); text-decoration: none; }
+  .btn.primary { background: var(--heading); border-color: var(--heading); color: var(--bg); }
+  .btn.primary:hover { opacity: 0.85; color: var(--bg); }
+  .note {
+    background: #2a2620; border-left: 4px solid #d4a017;
+    border-radius: 0 6px 6px 0; padding: 0.8rem 1rem; margin: 1rem 0; font-size: 0.95rem;
+  }
+  img.shot { max-width: 760px; width: 100%; border: 1px solid var(--border); border-radius: 6px; }
+  /* light-background SVG charts in this project */
+  img.chart { max-width: 760px; width: 100%; background: #f8f9fb; border-radius: 6px; margin: 0.6rem 0; }
+  .caption { font-size: 0.85rem; color: var(--muted); }
+  footer {
+    margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
+    color: var(--muted); font-size: 0.95rem;
+  }
+</style>
 </head>
 <body>
+<div class="container">
+
   <p class="lang">English ｜ <a href="index.html">繁體中文</a></p>
+
   <h1>Medical EHR Agentic AI (MedAgent-EHR)</h1>
-  <p class="banner">Stanford MedAgentBench <strong>~88%</strong> (above GPT-4o 72% / Claude 3.5 Sonnet 70%) &middot; fully self-hosted &middot; a single RTX 4090</p>
+  <p class="subtitle">A Self-Hosted Clinical Agent That Plans, Acts and Checks Itself in a FHIR EHR</p>
+  <div class="banner">Stanford MedAgentBench <strong>~88% (259–263 / 300)</strong> · above the best published baseline (Claude 3.5 Sonnet v2, 69.67%) · fully self-hosted · single RTX 4090</div>
 
-  <div class="section">
-    <h2>Design Concept</h2>
-    <ul>
-      <li>Unlike "one question, one answer" chat AI, this is an <strong>agentic AI</strong>: the LLM plans its own steps, decides which tool to call, performs clinical tasks, and self-checks before writing to the medical record.</li>
-      <li><strong>No fixed path, no fixed number of steps</strong> — the control flow is LLM-driven, not hard-coded.</li>
-      <li>Fully <strong>self-hosted on a local GPU</strong>, with no dependency on any cloud LLM API.</li>
-    </ul>
+  <p class="lead">
+    Unlike "one question, one answer" chat AI, this is an <strong>agentic AI</strong>: the LLM plans its own
+    steps, decides which tool to call, performs clinical tasks in a standard FHIR EHR, and
+    <strong>self-checks before writing to the medical record</strong> — fully self-hosted on a local GPU,
+    with no cloud LLM API.
+  </p>
+
+  <div class="btns">
+    <a class="btn primary" href="https://github.com/seancpc/MedAgent-EHR">GitHub Repo</a>
   </div>
 
-  <div class="section">
-    <h2>Project Overview</h2>
-    <p>The system performs query and write clinical tasks in a standard <strong>FHIR Electronic Health Record (EHR)</strong> environment (fetch the latest glucose, record blood pressure, place lab/referral orders, and more).</p>
-    <p>It uses a <strong>Planner–Executor–Verifier</strong> three-role agent architecture, evaluated objectively against Stanford's <strong>MedAgentBench (300 tasks, 10 clinical categories)</strong> using its official grader.</p>
-  </div>
+  <h2>Design Concept</h2>
+  <ul>
+    <li><strong>Agentic, not chat</strong>: the LLM plans steps, chooses tools, executes clinical tasks and self-checks before any write.</li>
+    <li><strong>No fixed path, no fixed number of steps</strong> — the control flow is LLM-driven, not hard-coded.</li>
+    <li>Fully <strong>self-hosted on a local GPU</strong>, with no dependency on any cloud LLM API.</li>
+  </ul>
 
-  <div class="section">
-    <h2>System Architecture</h2>
-    <ul>
-      <li><strong>Planner</strong>: breaks the clinical task into ordered steps.</li>
-      <li><strong>Executor (ReAct loop)</strong>: calls tools step by step, deciding the next move from each result.</li>
-      <li><strong>Verifier</strong>: a safety gate before any write to the record — every staged write is reviewed before commit is allowed.</li>
-      <li>Tools connect to <strong>HAPI FHIR R4</strong> via <strong>MCP</strong>; all reads and writes go through the standard FHIR API.</li>
-    </ul>
-    <img class="chart" src="architecture.en.svg" alt="MedAgent-EHR architecture: Planner → Executor → Verifier → FHIR">
-    <figure>
-      <img class="shot" src="screenshots/20260706_webdemo_timeline.png" alt="Web demo run: Plan and step-by-step ReAct timeline, including a blocked direct commit">
-      <figcaption>An actual web-demo run (record a blood pressure): a two-step Plan → <code>find_patient</code> locates the patient → <code>stage_write</code> passes Verifier review and writes to FHIR → the executor's attempt to call <code>commit_write</code> directly is blocked by the program-side gate (red block) → done. <strong>Both protection layers — the LLM Verifier and the program-side gate — are demonstrably active.</strong></figcaption>
-    </figure>
-  </div>
+  <h2>Project Overview</h2>
+  <ul>
+    <li><strong>Task</strong>: query and write clinical tasks in a standard <strong>FHIR Electronic Health Record (EHR)</strong> environment — fetch the latest glucose, record blood pressure, place lab / referral orders, and more.</li>
+    <li><strong>Architecture</strong>: a <strong>Planner–Executor–Verifier</strong> three-role agent.</li>
+    <li><strong>Evaluation</strong>: Stanford's <strong>MedAgentBench (300 tasks, 10 clinical categories)</strong>, scored with its official grader.</li>
+  </ul>
 
-  <div class="section">
-    <h2>Tech Stack</h2>
-    <ul>
-      <li>LLM: <strong>Gemma-4-26B-A4B-it (QAT Q4, Google)</strong>, self-hosted on an RTX 4090 via llama.cpp (also validated on Qwen3.6-35B-A3B)</li>
-      <li>Agent: Planner / Executor (ReAct) / Verifier three-role design</li>
-      <li>Tools &amp; data: <strong>MCP</strong> (fhir-mcp-server), <strong>HAPI FHIR R4</strong></li>
-      <li>Write safety: two-phase <code>stage → commit</code> + Verifier gate + medical-code / dosage validation</li>
-      <li>Evaluation: MedAgentBench official refsol grader, Python, Flask (web demo)</li>
-    </ul>
-  </div>
+  <h2>Architecture</h2>
+  <ul>
+    <li><strong>Planner</strong>: breaks the clinical task into ordered steps.</li>
+    <li><strong>Executor (ReAct loop)</strong>: calls tools step by step, deciding the next move from each result.</li>
+    <li><strong>Verifier</strong>: a safety gate before any write to the record — every staged write is reviewed before commit is allowed.</li>
+    <li>Tools connect to <strong>HAPI FHIR R4</strong> via <strong>MCP</strong>; all reads and writes go through the standard FHIR API.</li>
+  </ul>
+  <img class="chart" src="architecture.en.svg" alt="MedAgent-EHR architecture: Planner → Executor → Verifier → FHIR">
+  <img class="shot" src="screenshots/20260706_webdemo_timeline.png" alt="Web demo run: Plan and step-by-step ReAct timeline, including a blocked direct commit">
+  <p class="caption">An actual web-demo run (record a blood pressure): a two-step Plan → <code>find_patient</code> locates the patient → <code>stage_write</code> passes Verifier review and writes to FHIR → the executor's attempt to call <code>commit_write</code> directly is blocked by the program-side gate (red block) → done. Both protection layers — the LLM Verifier and the program-side gate — are demonstrably active.</p>
 
-  <div class="section">
-    <h2>Key Results</h2>
-    <ul>
-      <li><strong>MedAgentBench official score: ~88% (259–263 / 300)</strong>, <strong>above the best published baselines (GPT-4o 72%, Claude 3.5 Sonnet 70%)</strong>.</li>
-      <li>Read tasks near full marks; after FHIR shape alignment, write tasks <strong>task3 / task8 reach 30/30</strong>.</li>
-      <li><strong>Model portability</strong>: for Taiwan regulatory compliance the underlying LLM was migrated from Qwen (China) to Gemma-4 (Google); because the system is decoupled from the model, <strong>the swap took almost no code change and the score stayed nearly flat (265 → 263)</strong>.</li>
-    </ul>
-    <img class="chart" src="progress.en.svg" alt="MedAgentBench score progression 124 → 265">
-    <img class="chart" src="baseline.en.svg" alt="Overall success rate comparison across models">
+  <h2>Tech Stack</h2>
+  <table>
+    <tr><th>Category</th><th>Stack</th></tr>
+    <tr><td>LLM (self-hosted)</td><td>Gemma-4-26B-A4B-it (QAT Q4, Google) via llama.cpp on an RTX 4090; also validated on Qwen3.6-35B-A3B</td></tr>
+    <tr><td>Agent architecture</td><td>Planner / Executor (ReAct) / Verifier</td></tr>
+    <tr><td>Tools &amp; data</td><td>MCP (fhir-mcp-server), HAPI FHIR R4</td></tr>
+    <tr><td>Write safety</td><td>Two-phase <code>stage → commit</code>, Verifier gate, medical-code / dosage validation</td></tr>
+    <tr><td>Evaluation</td><td>MedAgentBench official refsol grader (300 tasks, 10 categories)</td></tr>
+    <tr><td>Deployment / tools</td><td>Flask (web demo), Docker, GGUF quantization, Python</td></tr>
+  </table>
 
-    <figure>
-      <img class="shot" src="screenshots/20260614_score_gemma_263.png" alt="Gemma final score 263/300 with per-category results">
-      <figcaption>Actual benchmark output: the deployed Gemma model over the full 300 tasks, official grade 263 pass (task3 / task4 / task8 writes all 30/30).</figcaption>
-    </figure>
-    <figure>
-      <img class="shot" src="screenshots/20260614_score_qwen_265.png" alt="Qwen score 265/300 with per-category results">
-      <figcaption>Pre-migration Qwen3.6 score of 265 pass — compared with the chart above, the model swap kept the score nearly flat (265 → 263), evidence that the system is decoupled from the model.</figcaption>
-    </figure>
-    <figure>
-      <img class="shot" src="screenshots/20260614_selfhosted_gemma.png" alt="Local llama-server serving the Gemma model">
-      <figcaption>Fully self-hosted: a local llama-server loads gemma4-26b-a4b — no cloud LLM API involved.</figcaption>
-    </figure>
+  <h2>Key Results</h2>
+  <ul>
+    <li><strong>MedAgentBench official score: ~88% (259–263 / 300)</strong>, above the best published baseline (Claude 3.5 Sonnet v2, 69.67%, MedAgentBench paper arXiv v2).</li>
+    <li>Read tasks near full marks; after FHIR shape alignment, write tasks <strong>task3 / task8 reach 30/30</strong>.</li>
+    <li><strong>Model portability</strong>: for Taiwan regulatory compliance the underlying LLM was migrated from Qwen (China) to Gemma-4 (Google); because the system is decoupled from the model, <strong>the swap took almost no code change and the score stayed nearly flat (265 → 263)</strong>.</li>
+  </ul>
+  <img class="chart" src="progress.en.svg" alt="MedAgentBench score progression 124 → 265">
+  <img class="chart" src="baseline.en.svg" alt="Overall success rate comparison across models">
+  <img class="shot" src="screenshots/20260614_score_gemma_263.png" alt="Gemma final score 263/300 with per-category results">
+  <p class="caption">Actual benchmark output: the deployed Gemma model over the full 300 tasks, official grade 263 pass (write tasks task3 / task8 both 30/30; read task task4 also 30/30).</p>
+  <img class="shot" src="screenshots/20260614_score_qwen_265.png" alt="Qwen score 265/300 with per-category results">
+  <p class="caption">Pre-migration Qwen3.6 score of 265 pass — compared with the chart above, the model swap kept the score nearly flat (265 → 263), evidence that the system is decoupled from the model.</p>
+  <img class="shot" src="screenshots/20260614_selfhosted_gemma.png" alt="Local llama-server serving the Gemma model">
+  <p class="caption">Fully self-hosted: a local llama-server loads gemma4-26b-a4b — no cloud LLM API involved.</p>
 
-    <p><strong>Honest note:</strong> this 88% reflects the performance of an <em>agent system aligned to this benchmark</em>, not a pure comparison of raw model capability; being able to distinguish "system performance" from "model capability" is itself part of this project's engineering value. task10 (conditional + <code>[value, timestamp]</code> special format) is a known output weakness of the deployed Gemma model; after investigation confirmed it is a model-level limitation, the choice was to <strong>keep the honest score rather than patch a single benchmark task</strong>.</p>
-  </div>
+  <div class="note"><strong>Honest note:</strong> this 88% reflects the performance of an <em>agent system aligned to this benchmark</em>, not a pure comparison of raw model capability; being able to distinguish "system performance" from "model capability" is itself part of this project's engineering value. task10 (conditional + <code>[value, timestamp]</code> special format) is a known output weakness of the deployed Gemma model; after investigation confirmed it is a model-level limitation, the choice was to <strong>keep the honest score rather than patch a single benchmark task</strong>.</div>
 
-  <div class="section">
-    <h2>Serving Performance (measured on a single RTX 4090)</h2>
-    <table>
-      <tr><th>Metric</th><th>Measured</th></tr>
-      <tr><td>Generation throughput (single stream)</td><td><strong>82 tokens/s</strong> (median of 5 runs)</td></tr>
-      <tr><td>Aggregate throughput (4 concurrent)</td><td><strong>119 tokens/s</strong> (4/4 succeeded)</td></tr>
-      <tr><td>Time to first token (TTFT)</td><td>2.4 s</td></tr>
-      <tr><td>Total latency, 256-token response</td><td>5.5 s (median)</td></tr>
-      <tr><td>GPU memory while serving</td><td>20.1 / 24 GB (whole card, incl. KV cache)</td></tr>
-      <tr><td>Model footprint</td><td>~14 GB (26B MoE, QAT Q4 GGUF)</td></tr>
-    </table>
-    <p>Measured against llama.cpp <code>llama-server</code> (OpenAI-compatible API) with a streaming probe included in the repo (<code>benchmark/llm_perf_probe.py</code>). The takeaway: <strong>a single consumer GPU serves a 26B model to multiple concurrent users at interactive latency</strong> — deployable where medical records must never leave the premises.</p>
-    <p><strong>Task efficiency</strong> (measured over the full 300 tasks): <strong>3.6 steps</strong> per task on average (median 4) — read/query tasks ~3.4 steps, write tasks 4.2, at most 10 steps for a single task. The agent converges naturally well inside the <code>max_steps=25</code> guardrail, showing that its bounded autonomy has a controllable cost.</p>
-    <figure>
-      <img class="shot" src="screenshots/20260706_perf_probe.png" alt="llm_perf_probe measured output: 82 tok/s, 119 tok/s at 4 concurrent, VRAM 20.1/24GB">
-      <figcaption>Measured output: 5 streaming runs + one 4-concurrent batch — the source of the table above.</figcaption>
-    </figure>
-  </div>
+  <h2>Serving Performance (single RTX 4090)</h2>
+  <table>
+    <tr><th>Metric</th><th>Measured</th></tr>
+    <tr><td>Generation throughput (single stream)</td><td><strong>82 tokens/s</strong> (median of 5 runs)</td></tr>
+    <tr><td>Aggregate throughput (4 concurrent)</td><td><strong>119 tokens/s</strong> (4/4 succeeded)</td></tr>
+    <tr><td>Time to first token (TTFT)</td><td>2.4 s</td></tr>
+    <tr><td>Total latency, 256-token response</td><td>5.5 s (median)</td></tr>
+    <tr><td>GPU memory while serving</td><td>20.1 / 24 GB (whole card, incl. KV cache)</td></tr>
+    <tr><td>Model footprint</td><td>~14 GB (26B MoE, QAT Q4 GGUF)</td></tr>
+  </table>
+  <p>Measured against llama.cpp <code>llama-server</code> (OpenAI-compatible API) with a streaming probe included in the repo (<code>benchmark/llm_perf_probe.py</code>). The takeaway: <strong>a single consumer GPU serves a 26B model to multiple concurrent users at interactive latency</strong> — deployable where medical records must never leave the premises.</p>
+  <p><strong>Task efficiency</strong> (full 300 tasks): <strong>3.6 steps</strong> per task on average (median 4) — read/query tasks ~3.4 steps, write tasks 4.2, at most 10 steps for a single task. The agent converges well inside the <code>max_steps=25</code> guardrail, so its bounded autonomy has a controllable cost.</p>
+  <img class="shot" src="screenshots/20260706_perf_probe.png" alt="llm_perf_probe measured output: 82 tok/s, 119 tok/s at 4 concurrent, VRAM 20.1/24GB">
+  <p class="caption">Measured output: 5 streaming runs + one 4-concurrent batch — the source of the table above.</p>
 
-  <div class="section">
-    <h2>Write-Safety Evidence (the Verifier gate)</h2>
-    <p>Every resource written to the record must pass Verifier review before commit. The excerpt below is from a real execution trace (task8: an orthopedic referral order, completed in two steps) — the write is only released after <strong>all five structured checks pass</strong>; any failure sends it back for the agent to correct and resubmit:</p>
-    <pre>"verdict": {
+  <h2>Write-Safety Evidence (the Verifier gate)</h2>
+  <p>Every resource written to the record must pass Verifier review before commit. The excerpt below is from a real execution trace (task8: an orthopedic referral order, completed in two steps) — the write is only released after <strong>all five structured checks pass</strong>; any failure sends it back for the agent to correct and resubmit:</p>
+  <pre>"verdict": {
   "staged_id": "stg_209141be",
   "verdict": "approved",
   "reason": "The ServiceRequest correctly uses the provided SNOMED code for
@@ -200,54 +180,41 @@
     "safety":          "pass"
   }
 }</pre>
-    <p>The full trajectory (Plan → tool call → generated FHIR resource → verdict → commit) is reproducible with <code>benchmark/run_single_task.py</code> in the repo.</p>
-    <figure>
-      <img class="shot" src="screenshots/20260706_verifier_task8.png" alt="Verifier review log across four write tasks: every stage_write is judged before commit">
-      <figcaption>Actual execution log: four consecutive tasks (two referral orders, one blood-pressure record, one conditional order) — every write passes Verifier judgment (with a concrete reason) before commit; task10_1, whose condition was not met, correctly produced no write at all.</figcaption>
-    </figure>
-  </div>
+  <p>The full trajectory (Plan → tool call → generated FHIR resource → verdict → commit) is reproducible with <code>benchmark/run_single_task.py</code> in the repo.</p>
+  <img class="shot" src="screenshots/20260706_verifier_task8.png" alt="Verifier review log across four write tasks: every stage_write is judged before commit">
+  <p class="caption">Actual execution log: four consecutive tasks (two referral orders, one blood-pressure record, one conditional order) — every write passes Verifier judgment (with a concrete reason) before commit; task10_1, whose condition was not met, correctly produced no write at all.</p>
 
-  <div class="section">
-    <h2>Future Extensibility</h2>
-    <ul>
-      <li>Replace task-provided codes with a real drug-code lookup tool (NDC / SNOMED / LOINC) for more autonomy in real-world settings.</li>
-      <li>Extend to more clinical task types and multi-step conditional decisions.</li>
-      <li>Connect to a real EHR, with stricter clinical safety rules and audit trails.</li>
-    </ul>
-  </div>
+  <h2>Scope &amp; Next</h2>
+  <ul>
+    <li>Replace task-provided codes with a real drug-code lookup tool (NDC / SNOMED / LOINC) for more autonomy in real-world settings.</li>
+    <li>Extend to more clinical task types and multi-step conditional decisions.</li>
+    <li>Connect to a real EHR, with stricter clinical safety rules and audit trails.</li>
+  </ul>
 
-  <div class="section">
-    <h2>Development Journey</h2>
-    <ul>
-      <div class="qa-block">
-        <li><strong>Problem:</strong> all write tasks failed — the FHIR resources the agent produced did not match the shape the official grader expected.</li>
-        <li><strong>Solution:</strong> let tools accept the codes/values/times given in the task context and carry them verbatim into the FHIR resource (code passthrough); task3 went 0 → 30.</li>
-      </div>
-      <div class="qa-block">
-        <li><strong>Problem:</strong> the Verifier safety gate could only see a one-line summary, not the full staged resource, and wrongly rejected correct writes.</li>
-        <li><strong>Solution:</strong> include the full FHIR resource in the staged summary so the Verifier can genuinely review the content; task8 went 0 → 30.</li>
-      </div>
-      <div class="qa-block">
-        <li><strong>Problem:</strong> read tasks found no data — the tool force-resolved terms to LOINC codes while the dataset used local codes (GLU / MG / A1C / K).</li>
-        <li><strong>Solution:</strong> added a <code>code</code> parameter to get_observations to query with the task-given code verbatim, skipping resolution; read tasks improved sharply.</li>
-      </div>
-      <div class="qa-block">
-        <li><strong>Problem:</strong> evaluating by "re-running only failed tasks" silently skipped regressed tasks, inflating the score (274 apparent vs ~249 real).</li>
-        <li><strong>Solution:</strong> trust only full 300-task runs as the single source of truth.</li>
-      </div>
-      <div class="qa-block">
-        <li><strong>Problem:</strong> after migrating to Gemma, the model leaked reasoning/markdown into task10 answers, contaminating the output.</li>
-        <li><strong>Solution:</strong> studied the official docs and disabled thinking the proper way — it still leaked, confirming a model-level limitation of Gemma-4-26B; judged that patching a single task would be gaming, and <strong>chose to keep the honest score</strong>.</li>
-        <figure>
-          <img class="shot" src="screenshots/20260614_task10_leak.png" alt="task10 answers contaminated by model reasoning text">
-          <figcaption>Evidence: task10 final_answer contaminated by leaked reasoning/markdown (e.g. <code>'''''json way</code>, <code>reasoning_summary…</code>), which breaks the official grader's exact match — a model output-layer limitation, not a system logic error.</figcaption>
-        </figure>
-      </div>
-    </ul>
-  </div>
+  <h2>Development Journey</h2>
+  <p>Not a straight line of successes — a chain of "hypothesis → verify → honest correction". Key nodes:</p>
+
+  <h3>① All write tasks failed: the FHIR shape did not match the grader</h3>
+  <p>The FHIR resources the agent produced did not match the shape the official grader expected. The fix: let tools accept the codes / values / times given in the task context and carry them verbatim into the FHIR resource (code passthrough) — task3 went 0 → 30.</p>
+
+  <h3>② The Verifier rejected correct writes because it could not see them</h3>
+  <p>The safety gate only received a one-line summary, not the full staged resource, so it wrongly rejected correct writes. Including the full FHIR resource in the staged summary let the Verifier genuinely review the content — task8 went 0 → 30.</p>
+
+  <h3>③ Read tasks found no data: forced LOINC resolution</h3>
+  <p>The tool force-resolved terms to LOINC codes while the dataset used local codes (GLU / MG / A1C / K). Adding a <code>code</code> parameter to <code>get_observations</code> to query with the task-given code verbatim, skipping resolution, improved read tasks sharply.</p>
+
+  <h3>④ A score illusion: re-running only the failed tasks</h3>
+  <p>Evaluating by "re-running only failed tasks" silently skipped tasks that had regressed, inflating the score (274 apparent vs ~249 real). From then on, only full 300-task runs count as the single source of truth.</p>
+
+  <h3>⑤ After the Gemma migration, reasoning leaked into task10 answers</h3>
+  <p>The model leaked reasoning / markdown into task10 answers, contaminating the output. Thinking was disabled the documented way and it still leaked, confirming a model-level limitation of Gemma-4-26B. Patching a single benchmark task would be gaming, so the honest score was kept.</p>
+  <img class="shot" src="screenshots/20260614_task10_leak.png" alt="task10 answers contaminated by model reasoning text">
+  <p class="caption">Evidence: task10 final_answer contaminated by leaked reasoning / markdown (e.g. <code>'''''json way</code>, <code>reasoning_summary…</code>), which breaks the official grader's exact match — a model output-layer limitation, not a system logic error.</p>
 
   <footer>
     <a href="https://app.notion.com/p/Sean-Chuang-AI-Engineer-Portfolio-39537081de3380ed9db7c1f73e6b83e3">← Back to portfolio</a>
   </footer>
+
+</div>
 </body>
 </html>
