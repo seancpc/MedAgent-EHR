@@ -33,7 +33,8 @@
   <text x="250" y="368" text-anchor="middle" font-size="11" fill="#475569">Read alignment</text>
   <text x="360" y="368" text-anchor="middle" font-size="11" fill="#475569">Write safety gate</text>
   <text x="470" y="368" text-anchor="middle" font-size="11" fill="#475569">Medication alignment</text>
-  <text x="580" y="368" text-anchor="middle" font-size="11" fill="#b45309" font-weight="bold">task10 format alignment (final)</text>
+  <text x="580" y="368" text-anchor="middle" font-size="11" fill="#b45309" font-weight="bold">task10 format</text>
+  <text x="580" y="382" text-anchor="middle" font-size="11" fill="#b45309" font-weight="bold">alignment (final)</text>
 
   <text x="360" y="400" text-anchor="middle" font-size="12" fill="#64748b">Each step is a deterministic fix (Qwen optimization journey), final 265 / 300</text>
   <text x="360" y="420" text-anchor="middle" font-size="11" fill="#94a3b8">&#8594; After regulatory migration to Gemma-4: ~263 / 300 (&#8776;88%), validating model portability</text>
