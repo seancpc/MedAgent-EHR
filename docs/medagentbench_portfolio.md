@@ -32,7 +32,7 @@ The system runs query and write clinical tasks in a simulated **FHIR EHR environ
 - **Other**: Python, Flask web demo
 
 ### Key results
-- **MedAgentBench official score: ~88% (259–263 / 300, deployed model Gemma-4; Qwen3.6 baseline 265 / 300)**, **above the best published baselines (GPT-4o 72%, Claude 3.5 Sonnet 70%)**. (9 categories stable at 258/270; task10 fluctuates between 1–5 due to unstable Gemma output, hence the honest range.)
+- **MedAgentBench official score: ~88% (259–263 / 300, deployed model Gemma-4; Qwen3.6 baseline 265 / 300)**, **above the best published baseline (Claude 3.5 Sonnet v2, 69.67%, MedAgentBench paper arXiv v2)**. (9 categories stable at 258/270; task10 fluctuates between 1–5 due to unstable Gemma output, hence the honest range.)
 - Read tasks near full marks; **write tasks reach 30/30 on task3/task8 after FHIR shape alignment**.
 - **Honest note**: this 88% reflects an **agent system aligned to this benchmark** as measured by the official grader, not a pure comparison of raw model capability (the paper tests un-tuned models with a standard harness). Being able to distinguish "system performance" from "model capability" is itself one of the project's engineering values.
 - **Model portability / regulatory compliance**: to comply with Taiwan regulations, the underlying LLM was migrated from Qwen (China) to **Gemma-4 (Google/US)**; because the system is decoupled from the model (tools via MCP, roles via prompt), **the swap took almost no code change and kept the score nearly flat (265 → 263)** — proving the system is not tied to a single model.
@@ -40,7 +40,7 @@ The system runs query and write clinical tasks in a simulated **FHIR EHR environ
 
 ![Score progression: 124 → 220 → 249 → 258 → 265 / 300](progress.en.svg)
 
-![Overall success rate: Qwen2.5 53% / DeepSeek-V3 56% / Claude 3.5 70% / GPT-4o 72% / this project 88%](baseline.en.svg)
+![Overall success rate: Qwen2.5 (72B) 51.33% / DeepSeek-V3 62.67% / GPT-4o 64.00% / Claude 3.5 Sonnet v2 69.67% / this project 87.67%](baseline.en.svg)
 
 ### Future extensibility
 - Replace task-provided codes with a **real drug-code lookup tool (NDC/SNOMED/LOINC)** to increase autonomy in real-world settings.
@@ -83,7 +83,7 @@ The system runs query and write clinical tasks in a simulated **FHIR EHR environ
 - **其他**:Python、Flask Web Demo
 
 ### 成效亮點
-- **MedAgentBench 官方評分:~88%(259–263 / 300,部署模型 Gemma-4;Qwen3.6 基準 265 / 300)**,**高於論文公布的最佳 baseline(GPT-4o 72%、Claude 3.5 Sonnet 70%)**。(9 類穩定 258/270;task10 因 Gemma 輸出不穩在 1–5 跳,故以範圍誠實表述)
+- **MedAgentBench 官方評分:~88%(259–263 / 300,部署模型 Gemma-4;Qwen3.6 基準 265 / 300)**,**高於論文公布的最佳 baseline(Claude 3.5 Sonnet v2,69.67%,MedAgentBench 論文 arXiv v2)**。(9 類穩定 258/270;task10 因 Gemma 輸出不穩在 1–5 跳,故以範圍誠實表述)
 - 讀取類任務近滿分;**寫入類任務經 FHIR 形狀對齊後 task3/task8 達 30/30**。
 - **誠實註記**:此 88% 反映的是「**為此 benchmark 對齊過的 agent 系統**」在官方 grader 上的表現,而非模型原始能力的純比較(論文以標準 harness 測未調校模型)。能分辨「系統表現」與「模型能力」,正是本專案的工程價值之一。
 - **模型可移植性 / 法規合規**:因應台灣法規,將底層 LLM 從 Qwen(中國)遷移至 **Gemma-4(Google/美國)**;由於系統與模型解耦(工具走 MCP、角色靠 prompt),**切換幾乎零程式改動,分數近乎持平(265 → 263)** —— 證明系統不綁單一模型。
@@ -91,7 +91,7 @@ The system runs query and write clinical tasks in a simulated **FHIR EHR environ
 
 ![分數進展:124 → 220 → 249 → 258 → 265 / 300](progress.svg)
 
-![Overall 成功率對比:Qwen2.5 53% / DeepSeek-V3 56% / Claude 3.5 70% / GPT-4o 72% / 本專案 88%](baseline.svg)
+![Overall 成功率對比:Qwen2.5(72B)51.33% / DeepSeek-V3 62.67% / GPT-4o 64.00% / Claude 3.5 Sonnet v2 69.67% / 本專案 87.67%](baseline.svg)
 
 ### 未來可擴展性
 - 以**真實藥品碼查詢工具(NDC/SNOMED/LOINC)** 取代目前由題目提供代碼,提升真實場景的自主性。

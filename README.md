@@ -12,7 +12,7 @@
 
 A self-hosted LLM clinical agent: in a standard **FHIR Electronic Health Record (EHR)** environment, the model **plans its own steps, calls tools, performs reads and writes, and self-checks before writing to the record**. Validated with the official grader of Stanford's **MedAgentBench (300 tasks)**.
 
-> **Result**: **~88% (259–263 / 300)** on the official MedAgentBench grader, **above the best published baselines (Claude 3.5 Sonnet v2 69.67%)**. The underlying model can be swapped between Qwen and Gemma with near-identical scores, demonstrating that the system is decoupled from any single model.
+> **Result**: **~88% (259–263 / 300)** on the official MedAgentBench grader, **above the best published baseline (Claude 3.5 Sonnet v2, 69.67%)**. The underlying model can be swapped between Qwen and Gemma with near-identical scores, demonstrating that the system is decoupled from any single model.
 >
 > ⚠️ *This score reflects an agent system aligned to this benchmark, not a pure comparison of raw model capability.*
 
